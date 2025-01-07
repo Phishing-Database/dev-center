@@ -23,7 +23,7 @@ jobs:
 
       - name: Check if comment already exists
         id: check-comments
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GH_BONE_PAT }}
           script: |
@@ -44,7 +44,7 @@ jobs:
 
       - name: Post instructions
         if: steps.check-comments.outputs.result != 'true'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GH_BONE_PAT }}
           script: |
