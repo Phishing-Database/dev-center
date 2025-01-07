@@ -1,4 +1,4 @@
-name: Verification
+name: Generate Verification ID for False Positive Reports
 
 on:
   issues:
@@ -8,7 +8,9 @@ on:
 
 jobs:
   generate-id:
-    if: contains(github.event.issue.labels.*.name, 'false positive') # Check for the label
+    if: |
+      (github.event.action == 'opened') ||
+      (github.event.action == 'labeled' && contains(github.event.label.name, 'false positive'))
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +21,29 @@ jobs:
           VERIFICATION_ID=$(echo -n "${ISSUE_URL}" | sha1sum | awk '{print $1}')
           echo "verification_id=antiphish-$VERIFICATION_ID" >> $GITHUB_ENV
 
-      - name: Post Instructions
+      - name: Check if comment already exists
+        id: check-comments
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GH_BONE_PAT }}
+          script: |
+            const issueNumber = context.issue.number;
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+            });
+            const existingComment = comments.data.some(comment =>
+              comment.body.includes('Verification Step Required')
+            );
+            return existingComment;
+
+      - name: Skip if comment exists
+        if: steps.check-comments.outputs.result == 'true'
+        run: echo "Verification instructions already exist. Skipping."
+
+      - name: Post instructions
+        if: steps.check-comments.outputs.result != 'true'
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GH_BONE_PAT }}
@@ -65,3 +89,5 @@ jobs:
               issue_number: issueNumber,
               body: instructions
             });
+        env:
+          verification_id: ${{ steps.generate-id.outputs.verification_id }}
