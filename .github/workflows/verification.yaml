@@ -48,7 +48,7 @@ jobs:
         with:
           github-token: ${{ secrets.GH_BONE_PAT }}
           script: |
-            const verificationId = process.env.verification_id;
+            const verificationId = process.env['VERIFICATION_ID'];
             const issueNumber = context.issue.number;
             const issueAuthor = context.payload.issue.user.login;
             const instructions = `
@@ -90,4 +90,4 @@ jobs:
               body: instructions
             });
         env:
-          verification_id: ${{ steps.generate-id.outputs.verification_id }}
+          VERIFICATION_ID: ${{ steps.generate-id.outputs.verification_id }}
