@@ -34,7 +34,7 @@ jobs:
               issue_number: issueNumber,
             });
             const existingComment = comments.data.some(comment =>
-              comment.body.includes('Verification Step Required')
+              comment.body.includes('Verification Required')
             );
             return existingComment;
 
@@ -54,7 +54,7 @@ jobs:
             const issueNumber = context.issue.number;
             const issueAuthor = context.payload.issue.user.login;
             const instructions = `
-            ### Verification Step Required
+            ### Verification Required
 
             @${issueAuthor}, thank you for submitting a false positive report! To help us **verify** your ownership of the affected domain(s), please complete the following steps:
 
