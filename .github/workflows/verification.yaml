@@ -1,4 +1,4 @@
-name: Generate Verification ID for False Positive Reports
+name: Verification ID Instructions
 
 on:
   issues:
