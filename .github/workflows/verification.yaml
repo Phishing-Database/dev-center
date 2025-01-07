@@ -60,9 +60,9 @@ jobs:
 
             1. Set a **DNS TXT record** for the domain(s) listed in this issue with the following details:
                 - **Record Name**: \`_phishingdb\`
-                - **Record Value**: \`antiphish-${verificationId}\`
+                - **Record Value**: \`${verificationId}\`
 
-                **Your Verification ID**: \`antiphish-${verificationId}\`
+                **Your Verification ID**: \`${verificationId}\`
 
             2. Wait for DNS propagation (this may take a few minutes to a few hours).
 
